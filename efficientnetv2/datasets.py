@@ -639,9 +639,9 @@ class HyperKvasirLiNoAugInput(CIFAR10Input):
           multiclass=False,
           tfds_name='hyperkvasir_li/no_aug',
           splits=dict(
-              train=dict(num_images=1_256_144, tfds_split='split_0'), # update number of records....Z
-              minival=dict(num_images=25_021, tfds_split='split_1'),
-              eval=dict(num_images=50_000, tfds_split='split_1')
+              train=dict(num_images=5324, tfds_split='split_0'),
+              minival=dict(num_images=5338, tfds_split='split_1'),
+              eval=dict(num_images=5338, tfds_split='split_1')
           )))
 
 
