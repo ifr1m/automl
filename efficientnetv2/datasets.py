@@ -628,6 +628,23 @@ class ImageNetTfdsInput(CIFAR10Input):
           )))
 
 
+
+class HyperKvasirLiNoAugInput(CIFAR10Input):
+
+  cfg = copy.deepcopy(CIFAR10Input.cfg)
+  cfg.update(
+      dict(
+          data_dir=None,
+          num_classes=23,
+          multiclass=False,
+          tfds_name='hyperkvasir_li/no_aug',
+          splits=dict(
+              train=dict(num_images=1_256_144, tfds_split='split_0'), # update number of records....Z
+              minival=dict(num_images=25_021, tfds_split='split_1'),
+              eval=dict(num_images=50_000, tfds_split='split_1')
+          )))
+
+
 def get_dataset_class(ds_name):
   return {
       'imagenet': ImageNetInput,
@@ -638,10 +655,33 @@ def get_dataset_class(ds_name):
       'flowers': FlowersInput,
       'tfflowers': TFFlowersInput,
       'cars': CarsInput,
+      'hyperkvasir_li_no_aug': HyperKvasirLiNoAugInput
   }[ds_name]
 
 
 ################# Dataset training configs ####################
+
+@ds_register
+class HyperKvasirLi():
+
+  cfg = hparams.Config(
+      data=dict(
+          ds_name='hyperkvasir_li_no_aug',
+          multiclass=False,
+      ),
+      train=dict(
+          epochs=350,
+          lr_base=0.016,
+          lr_warmup_epoch=5,
+          lr_sched='exponential',
+          label_smoothing=0.1,
+      ),
+      eval=dict(
+          batch_size=8,
+      ),
+  )
+
+
 @ds_register
 class ImageNet():
   """ImageNet train/eval configs."""

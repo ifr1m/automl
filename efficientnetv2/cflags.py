@@ -23,6 +23,7 @@ def define_flags():
   flags.DEFINE_string('dataset_cfg', 'Imagenet', 'dataset config name.')
   flags.DEFINE_string('hparam_str', '', 'Comma separated k=v pairs of hparams.')
   flags.DEFINE_string('sweeps', '', 'Comma separated k=v pairs for sweeping.')
+  flags.DEFINE_string('strategy', '', 'tpu, gpus, none')
   flags.DEFINE_bool('use_tpu', True, 'If true, use TPU; otherwise use CPU/GPU.')
   flags.DEFINE_string('tpu_job_name', None, 'job name, default to tpu_worker.')
   # Cloud TPU Cluster Resolvers

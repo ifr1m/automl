@@ -1,0 +1,1 @@
+python main_tf2.py --mode=train  --model_name=efficientnetv2-s  --dataset_cfg=hyperKvasirLi  --model_dir=$PWD/test
