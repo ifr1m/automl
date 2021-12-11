@@ -641,7 +641,8 @@ class HyperKvasirLiNoAugInput(CIFAR10Input):
           splits=dict(
               train=dict(num_images=5324, tfds_split='split_0'),
               minival=dict(num_images=5338, tfds_split='split_1'),
-              eval=dict(num_images=5338, tfds_split='split_1')
+              eval=dict(num_images=5338, tfds_split='split_1'),
+              trainval=dict(num_images=5338, tfds_split='split_1'),
           )))
 
 
@@ -670,11 +671,13 @@ class HyperKvasirLi():
           multiclass=False,
       ),
       train=dict(
+          batch_size=128,
           epochs=350,
           lr_base=0.016,
           lr_warmup_epoch=5,
           lr_sched='exponential',
           label_smoothing=0.1,
+          stages=0,
       ),
       eval=dict(
           batch_size=8,

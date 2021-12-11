@@ -16,6 +16,8 @@
 from absl import logging
 from absl.testing import parameterized
 import tensorflow as tf
+from tensorflow.python.data import AUTOTUNE
+
 import preprocessing
 
 
@@ -34,6 +36,26 @@ class PreprocessingTest(tf.test.TestCase, parameterized.TestCase):
   def test_preprocessing(self, augname):
     image = tf.zeros((300, 300, 3), dtype=tf.float32)
     preprocessing.preprocess_image(image, 224, True, None, augname)
+
+  def test_wrap(self):
+    import numpy as np
+    print(np.__version__)
+    dataset = self.get_ds()
+    for img in dataset.take(1).map(self.wrap, num_parallel_calls=AUTOTUNE, deterministic=True):
+      image = img
+    tf.print(image[0].shape)
+
+  def get_ds(self)-> tf.data.Dataset:
+      import tensorflow_datasets as tfds
+      return tfds.load(name="hyperkvasir_li/no_aug",split="split_0",as_supervised=True)
+
+  @staticmethod
+  def wrap(image, label):
+    """Returns 'image' with an extra channel set to all 1s."""
+    shape = tf.shape(image)
+    extended_channel = tf.ones([shape[0], shape[1], 1], image.dtype)
+    extended = tf.concat([image, extended_channel], 2)
+    return extended, label
 
 
 if __name__ == '__main__':
