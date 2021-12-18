@@ -230,7 +230,7 @@ def main(_) -> None:
         ckpt_callback = tf.keras.callbacks.ModelCheckpoint(
             os.path.join(FLAGS.model_dir, 'ckpt-{epoch:d}'),
             verbose=1,
-            save_weights_only=True)
+            save_weights_only=True, save_best_only=True)
         tb_callback = tf.keras.callbacks.TensorBoard(
             log_dir=FLAGS.model_dir, update_freq=100, profile_batch=0)
         rstr_callback = utils.ReuableBackupAndRestore(backup_dir=FLAGS.model_dir)
