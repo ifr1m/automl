@@ -758,8 +758,7 @@ class ImagenetFt(ImageNet):
           ema_decay=0.9996,
           weight_decay=1e-5,
           label_smoothing=0.1,
-          min_steps=10000,
-          isize=1.0,
+          min_steps=10000
       ),
       data=dict(
           ds_name='imagenettfds',
@@ -767,6 +766,83 @@ class ImagenetFt(ImageNet):
           mixup_alpha=0,
           cutmix_alpha=0,
       ),
+  )
+
+@ds_register
+class HyperKvasirLiFt2(HyperKvasirLi):
+
+  cfg = hparams.Config(
+      data=dict(
+          ds_name='hyperkvasir_li_no_aug',
+          multiclass=False,
+      ),
+      train=dict(
+          epochs=20,
+          batch_size=64,
+          lr_base=0.016,
+          lr_warmup_epoch=5,
+          lr_sched='exponential',
+          label_smoothing=0.1,
+          stages=0,
+      ),
+      eval=dict(
+          batch_size=8,
+      ),
+  )
+
+
+@ds_register
+class HyperKvasirLiFt3(HyperKvasirLi):
+
+  cfg = hparams.Config(
+      data=dict(
+          ds_name='hyperkvasir_li_no_aug',
+          multiclass=False,
+      ),
+      train=dict(
+          epochs=60,
+          batch_size=64,
+          lr_base=0.016,
+          lr_warmup_epoch=5,
+          lr_sched='exponential',
+          label_smoothing=0.1,
+          stages=0,
+      ),
+      eval=dict(
+          batch_size=8,
+      ),
+  )
+
+@ds_register
+class HyperKvasirLiFt(HyperKvasirLi):
+  """Finetune hyperkvasir configs."""
+  # Finetune should have less regularization due to the limited training steps.
+  cfg = hparams.Config(
+      model=dict(
+          dropout_rate=0.000001,
+          survival_prob=0.8,
+      ),
+      train=dict(
+          stages=0,
+          epochs=60,
+          batch_size=64,
+          optimizer='rmsprop',
+          lr_sched='constant',
+          lr_base=0.0005,
+          lr_warmup_epoch=1,
+          ema_decay=0.9996,
+          weight_decay=1e-5,
+          label_smoothing=0.1,
+          min_steps=10000,
+          isize=1.0,
+      ),
+      data=dict(
+          ds_name='hyperkvasir_li_no_aug',
+          multiclass=False,
+          augname='ft',
+          mixup_alpha=0,
+          cutmix_alpha=0,
+      )
   )
 
 
