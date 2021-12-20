@@ -702,6 +702,26 @@ class HyperKvasirLi:
         ),
     )
 
+@ds_register
+class HyperKvasirLi2:
+    cfg = hparams.Config(
+        data=dict(
+            ds_name='hyperkvasir_li_no_aug',
+            multiclass=False,
+        ),
+        train=dict(
+            batch_size=64,
+            epochs=350,
+            lr_base=0.016,
+            lr_warmup_epoch=5,
+            lr_sched='exponential',
+            label_smoothing=0.1,
+            stages=0,
+        ),
+        eval=dict(
+            batch_size=8,
+        ),
+    )
 
 @ds_register
 class HyperKvasirLiAug02x:
