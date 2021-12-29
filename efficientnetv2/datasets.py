@@ -731,7 +731,7 @@ class HyperKvasirLi3:
             multiclass=False,
         ),
         train=dict(
-            batch_size=120,
+            batch_size=100,
             epochs=350,
             lr_base=0.016,
             lr_warmup_epoch=5,
