@@ -33,8 +33,6 @@ import utils
 import wandb
 from wandb.keras import WandbCallback
 
-from efficientnetv2.utils import flatten_dict
-
 FLAGS = flags.FLAGS
 
 
@@ -239,7 +237,7 @@ def main(_) -> None:
         #     log_dir=FLAGS.model_dir, update_freq=100, profile_batch=0)
         wandb.init(project="hyperkvasir-li", entity="ifrimutcn", id=os.getenv('EXP'))
         monitoring_board = WandbCallback(save_model=False)
-        wandb.config = flatten_dict(config)
+        wandb.config = utils.flatten_dict(config)
         rstr_callback = utils.ReuableBackupAndRestore(backup_dir=FLAGS.model_dir)
 
         def filter_callbacks(callbacks):
