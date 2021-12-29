@@ -958,6 +958,39 @@ class HyperKvasirLiFt4(HyperKvasirLi):
     )
 
 @ds_register
+class HyperKvasirLiFt5(HyperKvasirLi):
+    """Finetune hyperkvasir configs."""
+    # Finetune should have less regularization due to the limited training steps.
+    cfg = hparams.Config(
+        model=dict(
+            dropout_rate=0.000001,
+            survival_prob=0.8,
+        ),
+        train=dict(
+            stages=0,
+            epochs=60,
+            batch_size=32,
+            optimizer='rmsprop',
+            lr_sched='constant',
+            lr_base=0.0005,
+            lr_warmup_epoch=1,
+            ema_decay=0.9996,
+            weight_decay=1e-5,
+            label_smoothing=0.1,
+            min_steps=10000,
+            isize=1.0,
+        ),
+        data=dict(
+            ds_name='hyperkvasir_li_no_aug',
+            multiclass=False,
+            augname='ft',
+            mixup_alpha=0,
+            cutmix_alpha=0,
+        )
+    )
+
+
+@ds_register
 class Cifar10Ft(ImagenetFt):
     """Finetune cifar10 configs."""
     cfg = copy.deepcopy(ImagenetFt.cfg)
