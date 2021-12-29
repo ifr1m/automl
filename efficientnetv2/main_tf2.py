@@ -235,9 +235,8 @@ def main(_) -> None:
             save_weights_only=True, save_best_only=True)
         # monitoring_board = tf.keras.callbacks.TensorBoard(
         #     log_dir=FLAGS.model_dir, update_freq=100, profile_batch=0)
-        wandb.init(project="hyperkvasir-li", entity="ifrimutcn", id=os.getenv('EXP'))
+        wandb.init(project="hyperkvasir-li", entity="ifrimutcn", id=os.getenv('EXP'), config=config)
         monitoring_board = WandbCallback(save_model=False)
-        wandb.config = utils.flatten_dict(config)
         rstr_callback = utils.ReuableBackupAndRestore(backup_dir=FLAGS.model_dir)
 
         def filter_callbacks(callbacks):

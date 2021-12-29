@@ -596,16 +596,3 @@ class ReuableBackupAndRestore(tf.keras.callbacks.experimental.BackupAndRestore):
   def on_train_end(self, logs=None):
     # don't delete the backup, so it can be used for future model.fit()s
     pass
-
-
-
-import collections
-def flatten_dict(d, parent_key='', sep='.'):
-    items = []
-    for k, v in d.items():
-        new_key = parent_key + sep + k if parent_key else k
-        if isinstance(v, collections.MutableMapping):
-            items.extend(flatten_dict(v, new_key, sep=sep).items())
-        else:
-            items.append((new_key, v))
-    return dict(items)
