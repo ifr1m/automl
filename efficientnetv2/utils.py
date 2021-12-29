@@ -105,6 +105,12 @@ class WarmupLearningRateSchedule(
       lr = tf.keras.optimizers.schedules.ExponentialDecay(
           self.initial_lr, decay_steps, self.decay_factor, staircase=True)(
               step)
+    # elif self.lr_decay_type == 'exponential_wr':
+    #   assert self.steps_per_epoch is not None
+    #   decay_steps = self.steps_per_epoch * self.decay_epochs
+    #   lr = tf.keras.optimizers.schedules.ExponentialDecay(
+    #       self.initial_lr, decay_steps, self.decay_factor, staircase=True)(
+    #           step)
     elif self.lr_decay_type == 'cosine':
       assert self.total_steps is not None
       lr = 0.5 * self.initial_lr * (
@@ -590,3 +596,16 @@ class ReuableBackupAndRestore(tf.keras.callbacks.experimental.BackupAndRestore):
   def on_train_end(self, logs=None):
     # don't delete the backup, so it can be used for future model.fit()s
     pass
+
+
+
+import collections
+def flatten_dict(d, parent_key='', sep='.'):
+    items = []
+    for k, v in d.items():
+        new_key = parent_key + sep + k if parent_key else k
+        if isinstance(v, collections.MutableMapping):
+            items.extend(flatten_dict(v, new_key, sep=sep).items())
+        else:
+            items.append((new_key, v))
+    return dict(items)

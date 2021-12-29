@@ -72,6 +72,27 @@ class UtilsTest(tf.test.TestCase):
     lr = exponential_schedule(70)
     self.assertAllClose(lr, 0.125)
 
+  # def test_plot_lr(self):
+  # import matplotlib.pyplot as plt
+  # import numpy as np
+  #     epocs = 20
+  #     steps_per_epoch = 10
+  #     exponential_schedule = utils.WarmupLearningRateSchedule(
+  #         1.0,
+  #         total_steps=epocs*steps_per_epoch,
+  #         steps_per_epoch=steps_per_epoch,
+  #         decay_epochs=2,
+  #         decay_factor=0.5,
+  #         lr_decay_type='exponential',
+  #         warmup_epochs=None)
+  #     x = np.arange(0, epocs*steps_per_epoch, 1)
+  #     y = np.array([exponential_schedule(xi) for xi in x])
+  #     plt.plot(x, y)
+  #     plt.xticks(np.arange(min(x), max(x) + 10, steps_per_epoch))
+  #     plt.grid()
+  #     plt.show()
+
+
   def test_warmup(self):
     warmup_schedule = utils.WarmupLearningRateSchedule(
         1.0,

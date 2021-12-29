@@ -30,6 +30,10 @@ import effnetv2_configs
 import effnetv2_model
 import hparams
 import utils
+import wandb
+from wandb.keras import WandbCallback
+
+from efficientnetv2.utils import flatten_dict
 
 FLAGS = flags.FLAGS
 
@@ -231,8 +235,11 @@ def main(_) -> None:
             os.path.join(FLAGS.model_dir, 'ckpt-{epoch:d}'),
             verbose=1,
             save_weights_only=True, save_best_only=True)
-        tb_callback = tf.keras.callbacks.TensorBoard(
-            log_dir=FLAGS.model_dir, update_freq=100, profile_batch=0)
+        # monitoring_board = tf.keras.callbacks.TensorBoard(
+        #     log_dir=FLAGS.model_dir, update_freq=100, profile_batch=0)
+        wandb.init(project="hyperkvasir-li", entity="ifrimutcn", id=os.getenv('EXP'))
+        monitoring_board = WandbCallback(save_model=False)
+        wandb.config = flatten_dict(config)
         rstr_callback = utils.ReuableBackupAndRestore(backup_dir=FLAGS.model_dir)
 
         def filter_callbacks(callbacks):
@@ -262,7 +269,7 @@ def main(_) -> None:
                 validation_data=get_dataset(
                     training=False, image_size=eval_size, config=config),
                 validation_steps=num_eval_images // config.eval.batch_size,
-                callbacks=filter_callbacks([ckpt_callback, tb_callback, rstr_callback]),
+                callbacks=filter_callbacks([ckpt_callback, monitoring_board, rstr_callback]),
                 # don't log spam if running on tpus
                 verbose=2 if strategy == 'tpu' else 1,
             )
@@ -272,7 +279,7 @@ def main(_) -> None:
                     get_dataset(training=True, image_size=train_size, config=config),
                     epochs=config.train.epochs,
                     steps_per_epoch=steps_per_epoch,
-                    callbacks=filter_callbacks([ckpt_callback, tb_callback, rstr_callback]),
+                    callbacks=filter_callbacks([ckpt_callback, monitoring_board, rstr_callback]),
                     verbose=2 if strategy == 'tpu' else 1,
                 )
             else:
@@ -302,7 +309,7 @@ def main(_) -> None:
                         initial_epoch=start_epoch,
                         epochs=end_epoch,
                         steps_per_epoch=steps_per_epoch,
-                        callbacks=filter_callbacks([ckpt_callback, tb_callback, rstr_callback]),
+                        callbacks=filter_callbacks([ckpt_callback, monitoring_board, rstr_callback]),
                         verbose=2 if strategy == 'tpu' else 1,
                     )
         elif FLAGS.mode == 'eval':
@@ -313,7 +320,7 @@ def main(_) -> None:
                     get_dataset(training=False, image_size=eval_size, config=config),
                     batch_size=config.eval.batch_size,
                     steps=num_eval_images // config.eval.batch_size,
-                    callbacks=filter_callbacks([tb_callback, rstr_callback]),
+                    callbacks=filter_callbacks([monitoring_board, rstr_callback]),
                     verbose=2 if strategy == 'tpu' else 1,
                 )
 
